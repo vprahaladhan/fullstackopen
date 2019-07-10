@@ -1,14 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const course = 'Half Stack application development'
-const part1 = 'Fundamentals of React'
-const exercises1 = 10
-const part2 = 'Using props to pass data'
-const exercises2 = 9
-const part3 = 'State of a component'
-const exercises3 = 14
-
 const Header = (props) => {
     return (
         <h1>{props.course}</h1>
@@ -23,33 +15,48 @@ const Part = (props) => {
     )
 }
 
-const Content = () => {
+const Content = (props) => {
     return (
         <div>
-            <Part name={part1} noOfExercises={exercises1} />
-            <Part name={part2} noOfExercises={exercises2} />
-            <Part name={part3} noOfExercises={exercises3} />
+            <Part name={props.part1} noOfExercises={props.exercises1} />
+            <Part name={props.part2} noOfExercises={props.exercises2} />
+            <Part name={props.part3} noOfExercises={props.exercises3} />
         </div>
     )
 }
 
-const Total = () => {
+const Total = (props) => {
     return (
         <p>
-            Number of exercises {exercises1 + exercises2 + exercises3} 
+            Number of exercises {props.exercises} 
         </p>
     )
 }
 
 const App = () => {
+    const course = 'Half Stack application development'
+    const part1 = {
+      name: 'Fundamentals of React',
+      exercises: 10
+    }
+    const part2 = {
+      name: 'Using props to pass data',
+      exercises: 7
+    }
+    const part3 = {
+      name: 'State of a component',
+      exercises: 14
+    }
 
-  return (
-    <div>
-        <Header course={course} />
-        <Content />
-        <Total />
-    </div>
-  )
+    return (
+        <div>
+            <Header course={course} />
+            <Content    part1={part1.name} exercises1={part1.exercises} 
+                        part2={part2.name} exercises2={part2.exercises}
+                        part3={part3.name} exercises3={part3.exercises} />
+            <Total exercises={part1.exercises + part2.exercises + part3.exercises}/>
+        </div>
+    )
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
