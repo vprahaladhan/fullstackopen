@@ -40,7 +40,10 @@ const App = (props) => {
                 <button onClick={() => selectAnecdote(getRandomInt(5))}>Next anecdote</button>
             </p>
 
-
+            <h1>Anecdote with most votes</h1>
+            <p>
+                {props.anecdotes[votes.indexOf(Math.max(...votes))]}
+            </p>
         </div>
     )
 }
