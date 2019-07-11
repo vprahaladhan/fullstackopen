@@ -14,14 +14,17 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
+    if (props.all === 0) {
+        return (<>No feedback given</>)
+    }
     return (
         <div>
             {good_fdbk} {props.good}<br />
             {neutral_fdbk} {props.neutral}<br />
             {bad_fdbk} {props.bad}<br />
-            all {all=props.good + props.neutral + props.bad}<br />
-            average {all === 0 ? 0 : average=(props.good - props.bad)/all}<br />
-            positive {all === 0 ? 0 : props.good / all * 100}%
+            all {props.all}<br />
+            average {average=(props.good - props.bad) / props.all}<br />
+            positive {props.good / props.all * 100}%
         </div>
     )
 }
@@ -37,6 +40,8 @@ const App = () => {
     const incNeutralFdbk = () => setNeutral(neutral + 1);
     const incBadFdbk = () => setBad(bad + 1);
 
+    all = good + neutral + bad
+
     return (
         <div>
             <h1>give feedback</h1>
@@ -44,7 +49,7 @@ const App = () => {
             <Button feedback={neutral_fdbk} onClick={incNeutralFdbk} />
             <Button feedback={bad_fdbk} onClick={incBadFdbk} />
             <h1>statistics</h1>
-            <Statistics good={good} neutral={neutral} bad={bad} />
+            <Statistics good={good} neutral={neutral} bad={bad} all={good + neutral + bad}/>
         </div>
     )
 }
