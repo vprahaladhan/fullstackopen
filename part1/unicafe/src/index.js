@@ -21,6 +21,8 @@ const App = () => {
     const incNeutralFdbk = () => setNeutral(neutral + 1);
     const incBadFdbk = () => setBad(bad + 1);
 
+    let all = 0, average = 0
+
     return (
         <div>
             <h1>give feedback</h1>
@@ -30,7 +32,10 @@ const App = () => {
             <h1>statistics</h1>
             {good_fdbk} {good}<br />
             {neutral_fdbk} {neutral}<br />
-            {bad_fdbk} {bad}
+            {bad_fdbk} {bad}<br />
+            all {all=good + neutral + bad}<br />
+            average {all === 0 ? 0 : average=(good - bad)/all}<br />
+            positive {all === 0 ? 0 : good / all * 100}%
         </div>
     )
 }
