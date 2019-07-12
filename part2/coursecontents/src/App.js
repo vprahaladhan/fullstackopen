@@ -23,8 +23,8 @@ const App = () => {
         id: 3
       },
       {
-        name: 'ReactJS demystified',
-        exercises: 7,
+        name: 'React demystified',
+        exercises: 3,
         id: 4
       }
     ]
