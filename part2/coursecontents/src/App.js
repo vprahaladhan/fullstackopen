@@ -18,8 +18,8 @@ const App = () => {
         exercises: 14
       },
       {
-        name: 'Mastering React',
-        exercises: 8
+        name: 'Mastering React+Redux',
+        exercises: 10
       }
     ]
   }
