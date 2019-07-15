@@ -44,13 +44,13 @@ const App = () => {
       {allCountries.length === 1 ? 
         <div>
           <h1>{countriesToShow[0].name}</h1>
-          <p>
+          <div>
             Capital {countriesToShow[0].capital}<br/>
             Population {countriesToShow[0].population}
-            <p><h2>Languages</h2></p>
+            <h2><p>Languages</p></h2>
             <ul>{countriesToShow[0].languages.map(lang => <li key={lang.iso639_2}>{lang.name}</li>)}</ul>
             <p><img src={countriesToShow[0].flag} alt={countriesToShow[0].name} height="100" width="100"/></p>
-          </p>
+          </div>
         </div> : 
         (allCountries.length > 10 ? "Too many countries, specify another filter" : <ul style={{listStyle:'none'}}>{allCountries}</ul>)}
       {/* <Persons filteredNames={namesToShow} /> */}
