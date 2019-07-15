@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import axios from 'axios'
 
 const App = () => {
 
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '99300224' }
-  ])
- 
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ phoneno, setPhoneNo ] = useState('')
   const [ searchText, setSearchText ] = useState('')
@@ -18,7 +16,7 @@ const App = () => {
   const addNameToPhonebook = (event) => {
     event.preventDefault()
     persons.every(person => !person.name.includes(newName)) ? 
-      setPersons(persons.concat({name: newName, phone: phoneno})) : alert(`'${newName}' already exists in the phone book`)
+      setPersons(persons.concat({id: persons.length + 1, name: newName, number: phoneno})) : alert(`'${newName}' already exists in the phone book`)
     setNewName('')
     setPhoneNo('')
     setSearchText('')
@@ -29,6 +27,16 @@ const App = () => {
   const setPhoneNumber = (event) => setPhoneNo(event.target.value)
 
   const showNamesWith = (event) => setSearchText(event.target.value)
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'persons')
 
   return (
     <div>
