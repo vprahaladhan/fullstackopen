@@ -8,8 +8,8 @@ const Countries = ({countries, setCountries}) => {
       <table key={country.name}>  
         <tbody key={country.name}>
           <tr key={country.name}>
-            <td style={{width: '80%'}}>{country.name}</td> 
-            <td style={{width: '20%'}}><button onClick={() => {setCountries([country])}}>show</button></td>
+            <td style={{width: '90%'}}>{country.name}</td> 
+            <td style={{width: '10%'}}><button onClick={() => {setCountries([country])}}>show</button></td>
           </tr>
         </tbody>
       </table>
