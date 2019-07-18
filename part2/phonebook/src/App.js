@@ -31,8 +31,9 @@ const App = () => {
   
   const addNameToPhonebook = (event) => {
     event.preventDefault()
-    persons.every(person => !person.name.includes(newName)) ? 
-      postToServer(newName, phoneno) : alert(`'${newName}' already exists in the phone book`)
+    const person = persons.find(person => person.name == newName) 
+    person == null ? 
+      postToServer(newName, phoneno) : updatePhonebookEntry({...person, number: phoneno})
   } 
 
   const postToServer = (name, number) => {
@@ -40,12 +41,6 @@ const App = () => {
       .addEntryToPhonebook({name, number})
       .then(response => fetchAllEntries())
     blankAllInputFields()
-  }
-
-  const blankAllInputFields = () => {
-    setNewName('')
-    setPhoneNo('')
-    setSearchText('')
   }
 
   const deleteEntry = (event) => {
@@ -58,7 +53,22 @@ const App = () => {
           fetchAllEntries()
         })
       }
+  }
+
+  const updatePhonebookEntry = (person) => {
+    if (window.confirm(`${person.name} is already added to phonebook, replace old number with new one?`)) { 
+      PhonebookService
+        .updatePhonebookEntry(person)
+        .then(response => fetchAllEntries())
+      blankAllInputFields()
     }
+  }
+
+  const blankAllInputFields = () => {
+    setNewName('')
+    setPhoneNo('')
+    setSearchText('')
+  }
 
   const setName = (event) => setNewName(event.target.value)
 

@@ -10,8 +10,8 @@ const addEntryToPhonebook = newEntry => {
   return axios.post(baseUrl, newEntry).then(response => response.data)
 }
 
-const updatePhonebookEntry = (id, newEntry) => {
-  return axios.put(`${baseUrl}/${id}`, newEntry).then(response => response.data)
+const updatePhonebookEntry = (newEntry) => {
+  return axios.put(`${baseUrl}/${newEntry.id}`, newEntry).then(response => response.data)
 }
 
 const deletePhonebookEntry = (id) => {
