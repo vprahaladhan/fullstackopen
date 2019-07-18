@@ -26,11 +26,6 @@
       "id": 5
     },
     {
-      "name": "Mary Koo",
-      "number": "94375612",
-      "id": 6
-    },
-    {
       "name": "Mary Phoo",
       "number": "12345678",
       "id": 7
@@ -44,11 +39,6 @@
       "name": "Harry Truman",
       "number": "97652946",
       "id": 9
-    },
-    {
-      "name": "Soori",
-      "number": "12340000",
-      "id": 10
     }
   ]
 }
