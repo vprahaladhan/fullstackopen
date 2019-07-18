@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import PhonebookService from './services/PhonebookService'
 import axios from 'axios'
 
 const App = () => {
@@ -13,10 +14,24 @@ const App = () => {
 
   const namesToShow = persons.filter(person => person.name.search(new RegExp(searchText, 'i')) >= 0)
   
+  const postToServer = (name, number, id) => {
+    PhonebookService
+      .addEntryToPhonebook({name, number, id})
+      .then(response => {
+        PhonebookService.fetchPhonebookEntries()
+          .then(response => {
+            console.log(response)
+            setPersons(response)
+            }
+          )
+        }
+      )
+  }    
+
   const addNameToPhonebook = (event) => {
     event.preventDefault()
     persons.every(person => !person.name.includes(newName)) ? 
-      setPersons(persons.concat({id: persons.length + 1, name: newName, number: phoneno})) : alert(`'${newName}' already exists in the phone book`)
+      postToServer(newName, phoneno, persons.length + 1) : alert(`'${newName}' already exists in the phone book`)
     setNewName('')
     setPhoneNo('')
     setSearchText('')
@@ -33,6 +48,7 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
+        console.log(response.data)
         setPersons(response.data)
       })
   }, [])
