@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import PhonebookService from './services/PhonebookService'
+import Notification from './components/Notification'
 import axios from 'axios'
 
 const App = () => {
@@ -11,6 +12,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ phoneno, setPhoneNo ] = useState('')
   const [ searchText, setSearchText ] = useState('')
+  const [ successMsg, setSuccessMsg ] = useState(null)
 
   const namesToShow = persons.filter(person => person.name.search(new RegExp(searchText, 'i')) >= 0)
   
@@ -39,7 +41,11 @@ const App = () => {
   const postToServer = (name, number) => {
     PhonebookService
       .addEntryToPhonebook({name, number})
-      .then(response => fetchAllEntries())
+      .then(response => {
+        fetchAllEntries()
+        setSuccessMsg(`Successfully added ${name} phonebook`)
+        setTimeout(() => setSuccessMsg(null), 1000) 
+      })
     blankAllInputFields()
   }
 
@@ -59,7 +65,11 @@ const App = () => {
     if (window.confirm(`${person.name} is already added to phonebook, replace old number with new one?`)) { 
       PhonebookService
         .updatePhonebookEntry(person)
-        .then(response => fetchAllEntries())
+        .then(response => {
+          fetchAllEntries()
+          setSuccessMsg(`Successfully updated ${person.name}'s phone num to ${person.number}`)
+          setTimeout(() => setSuccessMsg(null), 1000)             
+        })
       blankAllInputFields()
     }
   }
@@ -84,6 +94,7 @@ const App = () => {
       <PersonForm name={newName} phone={phoneno} addName={addNameToPhonebook} setNewName={setName} setPhone={setPhoneNumber} />
       <h2>Numbers</h2>
       <Persons filteredNames={namesToShow} deletePhonebookEntry={deleteEntry} />
+      {successMsg ? <Notification message={successMsg} /> : <></>}
     </div>
   )
 }
