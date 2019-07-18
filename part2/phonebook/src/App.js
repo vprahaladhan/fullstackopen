@@ -12,7 +12,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ phoneno, setPhoneNo ] = useState('')
   const [ searchText, setSearchText ] = useState('')
-  const [ successMsg, setSuccessMsg ] = useState(null)
+  const [ message, setMessage ] = useState(null)
+  const [ msgColor, setMsgColor ] = useState(null)
 
   const namesToShow = persons.filter(person => person.name.search(new RegExp(searchText, 'i')) >= 0)
   
@@ -43,8 +44,9 @@ const App = () => {
       .addEntryToPhonebook({name, number})
       .then(response => {
         fetchAllEntries()
-        setSuccessMsg(`Successfully added ${name} phonebook`)
-        setTimeout(() => setSuccessMsg(null), 1000) 
+        setMessage(`Successfully added ${name} to phonebook`)
+        setMsgColor('green')
+        setTimeout(() => setMessage(null), 1000) 
       })
     blankAllInputFields()
   }
@@ -55,8 +57,13 @@ const App = () => {
       PhonebookService
         .deletePhonebookEntry(person.id)
         .then(response => {
-          window.alert(`${person.name} successfully deleted!`)
           fetchAllEntries()
+          window.alert(`${person.name} successfully deleted!`)
+        })
+        .catch(error => {
+          setMessage(`${person.name} has already been removed from server!`)
+          setMsgColor('red')
+          setTimeout(() => setMessage(null), 1000)  
         })
       }
   }
@@ -67,8 +74,13 @@ const App = () => {
         .updatePhonebookEntry(person)
         .then(response => {
           fetchAllEntries()
-          setSuccessMsg(`Successfully updated ${person.name}'s phone num to ${person.number}`)
-          setTimeout(() => setSuccessMsg(null), 1000)             
+          setMessage(`Successfully updated ${person.name}'s phone num to ${person.number}`)
+          setTimeout(() => setMessage(null), 1000)             
+        })
+        .catch(error => {
+          setMessage(`${person.name}'s has already been removed from server!`)
+          setMsgColor('green')
+          setTimeout(() => setMessage(null), 1000)  
         })
       blankAllInputFields()
     }
@@ -94,7 +106,7 @@ const App = () => {
       <PersonForm name={newName} phone={phoneno} addName={addNameToPhonebook} setNewName={setName} setPhone={setPhoneNumber} />
       <h2>Numbers</h2>
       <Persons filteredNames={namesToShow} deletePhonebookEntry={deleteEntry} />
-      {successMsg ? <Notification message={successMsg} /> : <></>}
+      {message ? <Notification message={message} msgColor={msgColor} /> : <></>}
     </div>
   )
 }

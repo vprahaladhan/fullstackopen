@@ -1,9 +1,8 @@
 import React from 'react'
 
-const Notification = ({message}) => {
-
-    const msgStyle = {
-        color: 'green',
+const Notification = ({message, msgColor}) => {
+    const messageStyle = {
+        color: 'white',
         background: 'lightgrey',
         fontSize: 20,
         borderStyle: 'solid',
@@ -11,8 +10,9 @@ const Notification = ({message}) => {
         padding: 10,
         marginBottom: 10
     }
+    messageStyle.color = msgColor
 
-    return <div style={msgStyle}>{message}</div>
+    return <div style={messageStyle}>{message}</div>
 }
 
 export default Notification
