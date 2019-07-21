@@ -34,7 +34,7 @@ const App = () => {
   }
 
   const setWeather = (city) => {
-    axios.get('http://api.apixu.com/v1/current.json?key=' + APIXU_KEY + '&q=' + city)
+    axios.get(`http://api.apixu.com/v1/current.json?key=${APIXU_KEY}&q=${city}`)
           .then(response => response.data)
           .then(data => setCityWeather([data.current.temp_c, data.current.condition.icon, data.current.wind_kph, data.current.wind_dir]))
     return cityWeather

@@ -18,15 +18,13 @@ const App = () => {
   const namesToShow = persons.filter(person => person.name.search(new RegExp(searchText, 'i')) >= 0)
   
   useEffect(() => {
-    console.log('effect')
     axios
-      .get('http://localhost:3001/persons')
+      .get('/api/persons')
       .then(response => {
         console.log(response.data)
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const fetchAllEntries = () =>         
     PhonebookService.fetchPhonebookEntries()
@@ -34,7 +32,7 @@ const App = () => {
   
   const addNameToPhonebook = (event) => {
     event.preventDefault()
-    const person = persons.find(person => person.name == newName) 
+    const person = persons.find(person => person.name.trim() === newName.trim()) 
     person == null ? 
       postToServer(newName, phoneno) : updatePhonebookEntry({...person, number: phoneno})
   } 
@@ -49,23 +47,6 @@ const App = () => {
         setTimeout(() => setMessage(null), 1000) 
       })
     blankAllInputFields()
-  }
-
-  const deleteEntry = (event) => {
-    const person = persons.find(person => person.id.toString() === event.target.value)
-    if (window.confirm(`Do you want to delete ${person.name}?`)) { 
-      PhonebookService
-        .deletePhonebookEntry(person.id)
-        .then(response => {
-          fetchAllEntries()
-          window.alert(`${person.name} successfully deleted!`)
-        })
-        .catch(error => {
-          setMessage(`${person.name} has already been removed from server!`)
-          setMsgColor('red')
-          setTimeout(() => setMessage(null), 1000)  
-        })
-      }
   }
 
   const updatePhonebookEntry = (person) => {
@@ -84,6 +65,21 @@ const App = () => {
         })
       blankAllInputFields()
     }
+  }
+
+  const deleteEntry = (event) => {
+    const person = persons.find(person => person.id.toString() === event.target.value)
+    if (window.confirm(`Do you want to delete ${person.name}?`)) { 
+      PhonebookService
+        .deletePhonebookEntry(person.id)
+        .then(response => fetchAllEntries())
+        .catch(error => {
+          setMessage(`${person.name} has already been removed from server!`)
+          setMsgColor('red')
+          setTimeout(() => setMessage(null), 1000) 
+          fetchAllEntries()
+        })
+      }
   }
 
   const blankAllInputFields = () => {

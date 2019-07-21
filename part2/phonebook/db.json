@@ -1,19 +1,14 @@
 {
   "persons": [
     {
-      "name": "Harry Truman",
-      "number": "98765942",
-      "id": 1
-    },
-    {
       "name": "Tom Hanks",
       "number": "12345678",
       "id": 4
     },
     {
-      "name": "Kris Humpries",
-      "number": "98300225",
-      "id": 5
+      "name": "Tom Cruise",
+      "number": "98453290",
+      "id": 6
     }
   ]
 }

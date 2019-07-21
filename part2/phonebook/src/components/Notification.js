@@ -2,7 +2,7 @@ import React from 'react'
 
 const Notification = ({message, msgColor}) => {
     const messageStyle = {
-        color: 'white',
+        color: msgColor,
         background: 'lightgrey',
         fontSize: 20,
         borderStyle: 'solid',
@@ -10,7 +10,7 @@ const Notification = ({message, msgColor}) => {
         padding: 10,
         marginBottom: 10
     }
-    messageStyle.color = msgColor
+    // messageStyle.color = msgColor
 
     return <div style={messageStyle}>{message}</div>
 }
