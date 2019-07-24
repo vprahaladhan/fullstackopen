@@ -6,62 +6,64 @@ const cors = require('cors')
 
 app.use(bodyParser.json())
 app.use(cors())
+app.use(express.static('build'))
 
-let notes = [
-    {
-        id: 1,
-        content: "HTML/CSS is easy",
-        date: "2019-05-30T17:30:31.098Z",
-        important: true
-    },
-    {
-        id: 2,
-        content: "Browser can execute only Javascript",
-        date: "2019-05-30T18:39:34.091Z",
-        important: false
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        date: "2019-05-30T19:20:14.298Z",
-        important: true
-    },
-    {
-        id: 4,
-        content: "Javascript is powerful",
-        date: "2019-05-30T19:20:14.298Z",
-        important: false
+let allNotes = []
+
+const mongoose = require('mongoose')
+
+const url =
+    `mongodb+srv://admin:admin@learn-mern-stack-nreww.gcp.mongodb.net/note-app?retryWrites=true&w=majority`
+
+mongoose.connect(url, { useNewUrlParser: true })
+
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
     }
-]
+  })
+
+const Note = mongoose.model('Note', noteSchema)
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+    res.send('<h1>Welcome to Notes App!</h1>')
 })
   
-app.get('/notes', (req, res) => {
-    res.json(notes)
+app.get('/api/notes', (req, res) => {
+    Note.find({}).then(notes => res.json(notes.map(note => note.toJSON())))
 })
 
-app.get('/notes/:id', (req, res) => {
-    res.json(notes.find(note => note.id == req.params.id))
+app.get('/api/notes/:id', (req, res) => {
+    Note.findById(req.params.id).then(note => res.json(note))
 })
 
-app.post('/notes', (request, response) => {
-    request.body.id = Math.max(...notes.map(note => note.id)) + 1
-    notes = notes.concat(request.body)
-    response.json(request.body)
+app.post('/api/notes', (req, res) => {
+    const note = new Note({
+        content: req.body.content,
+        date: new Date(),
+        important: false,
+    })
+    note.save().then(newNote => res.json(newNote.toJSON()))
 })
 
-app.put('/notes/:id', (request, response) => {
-    const note = notes.find(note => note.id == request.params.id)
-    note.content = request.body.content
-    note.important = request.body.important
-    response.status(204).end()
+app.put('/api/notes/:id', (req, res) => {
+    Note.findById(req.params.id).then(note => {
+        note.important = !note.important
+        note.save().then(newNote => res.json(newNote.toJSON()))
+    })
 })
 
-app.delete('/notes/:id', (request, response) => {
-    notes = notes.filter(note => note.id != request.params.id)
-    response.status(204).end()
+app.delete('/api/notes/:id', (req, res) => {
+    // notes = notes.filter(note => note.id != request.params.id)
+    // response.status(204).end()
 })
 
 const PORT = process.env.PORT || 3001

@@ -19,7 +19,7 @@ const App = () => {
   
   useEffect(() => {
     axios
-      .get('/api/persons')
+      .get('http://localhost:3001/api/persons')
       .then(response => {
         console.log(response.data)
         setPersons(response.data)
@@ -42,10 +42,10 @@ const App = () => {
       .addEntryToPhonebook({name, number})
       .then(response => {
         fetchAllEntries()
-        setMessage(`Successfully added ${name} to phonebook`)
-        setMsgColor('green')
-        setTimeout(() => setMessage(null), 1000) 
+        !response.error ? 
+          displayMessage(`Successfully added ${name} to phonebook`, 'green') : displayMessage(response.error, 'red')
       })
+      .catch(error => displayMessage("Unknown error!", "red"))
     blankAllInputFields()
   }
 
@@ -55,13 +55,10 @@ const App = () => {
         .updatePhonebookEntry(person)
         .then(response => {
           fetchAllEntries()
-          setMessage(`Successfully updated ${person.name}'s phone num to ${person.number}`)
-          setTimeout(() => setMessage(null), 1000)             
+          displayMessage(`Successfully updated ${person.name}'s phone num to ${person.number}`, 'green')
         })
         .catch(error => {
-          setMessage(`${person.name}'s has already been removed from server!`)
-          setMsgColor('green')
-          setTimeout(() => setMessage(null), 1000)  
+          displayMessage(`${error}`, 'red')
         })
       blankAllInputFields()
     }
@@ -69,19 +66,25 @@ const App = () => {
 
   const deleteEntry = (event) => {
     const person = persons.find(person => person.id.toString() === event.target.value)
+    let msg
     if (window.confirm(`Do you want to delete ${person.name}?`)) { 
       PhonebookService
         .deletePhonebookEntry(person.id)
-        .then(response => fetchAllEntries())
-        .catch(error => {
-          setMessage(`${person.name} has already been removed from server!`)
-          setMsgColor('red')
-          setTimeout(() => setMessage(null), 1000) 
+        .then(response => msg = `${person.name} successfully deleted from server!`)
+        .catch(error => msg = `${person.name} doesn't exist on server!`)
+        .finally(() => {
+          displayMessage(msg, 'red')
           fetchAllEntries()
         })
-      }
+    }
   }
 
+  const displayMessage = (msg, color) => {
+    setMessage(msg)
+    setMsgColor(color)
+    setTimeout(() => setMessage(null), 2000) 
+  }
+  
   const blankAllInputFields = () => {
     setNewName('')
     setPhoneNo('')
